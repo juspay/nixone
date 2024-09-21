@@ -20,7 +20,7 @@ jobs:
           echo '<html><body><pre>' > public/index.html
           cat setup.sh >> public/index.html
           echo '</pre></body></html>' >> public/index.html
-          cp setup.sh public/
+          cp setup.sh public/setup
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
