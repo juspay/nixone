@@ -1,0 +1,28 @@
+name: Deploy setup.sh to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Pages content
+        run: |
+          mkdir public
+          cp setup.sh public/
+          echo '<html><body><pre>' > public/index.html
+          echo "Please see https://github.com/juspay/nixone" >> public/index.html
+          echo '</pre></body></html>' >> public/index.html
+          cp setup.sh public/setup
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

@@ -1,8 +1,8 @@
 # nixone
 
-**Status**: WIP
+**Status**: Beta
 
-One-click setup of all things Nix for Juspay'ers
+One-click setup of all things Nix for Juspay'ers. We provide an one-line CLI that will install Nix, all the way to setting up home-manager (obviating homebrew) on your Juspay provided Macbook, as well as other Linux machines.
 
 ## Getting Started
 
