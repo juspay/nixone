@@ -3,8 +3,7 @@ name: Deploy setup.sh to GitHub Pages
 on:
   push:
     branches:
-      - main  # or your default branch name
-      - init
+      - main
 
 jobs:
   deploy:
