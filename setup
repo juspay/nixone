@@ -21,6 +21,6 @@ nix --accept-flake-config run github:juspay/omnix -- \
 nix run
 # TODO: ^ must move dotfiles out of the way
 
-# New shell to activate home-manager env
-echo "\n# Spawning new shell"
-env -i HOME="$HOME" "$SHELL" -l
+echo "\n# All done 🥳 Please start a **new terminal window**"
+# TODO: Can we automate this? This doesn't work
+# env -i HOME="$HOME" "$SHELL" -l
