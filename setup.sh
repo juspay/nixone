@@ -23,4 +23,4 @@ nix run
 
 # New shell to activate home-manager env
 echo "\n# Spawning new shell"
-exec $SHELL
+exec $SHELL -l
