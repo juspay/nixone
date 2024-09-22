@@ -12,6 +12,9 @@ On a macOS machine that does not already have Nix installed run,
 curl --proto '=https' --tlsv1.2 -sSf -L https://juspay.github.io/nixone/setup | sh -s
 ```
 
+>[!NOTE]
+> You may still run this command if you installed Nix already using Determinate Systes nix-installer. The script will then setup `nix-dev-home` for you (see below).
+
 ## What it does
 
 - [Install Nix](https://nixos.asia/en/install)
