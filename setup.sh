@@ -17,7 +17,7 @@ mkdir -p ~/nixconfig && cd ~/nixconfig
 nix --accept-flake-config run github:juspay/omnix -- \
   init github:juspay/nix-dev-home -o . \
   --non-interactive \
-  --params '{"username":"'$(whoami)'", "git-name":"'$(id -F)'", "git-email":"'$(whoami)'@juspay.in", "neovim": true, "github-ci": false}'
+  --params '{"username":"'$(whoami)'", "git-name":"'$(id -F)'", "git-email":"'$(whoami)'@juspay.in", "neovim": false, "github-ci": false}'
 nix run
 # TODO: ^ must move dotfiles out of the way
 
