@@ -15,11 +15,14 @@ nix --accept-flake-config run github:juspay/omnix health
 echo "\n# Setting up home-manager & direnv"
 mkdir -p ~/nixconfig && cd ~/nixconfig
 nix --accept-flake-config run github:juspay/omnix -- \
-  init github:juspay/nix-dev-home -o . \
+  init github:juspay/nixos-unified-template#nix-darwin -o . \
   --non-interactive \
-  --params '{"username":"'$(whoami)'", "git-name":"'$(id -F)'", "git-email":"'$(whoami)'@juspay.in", "neovim": true, "github-ci": false}'
-nix run
-# TODO: ^ must move dotfiles out of the way
+  --params '{"username":"'$(id -un)'", "git-name":"'$(id -F)'", "git-email":"'$(id -un)'@juspay.in", "hostname": "'$(hostname -s)'"}'
+
+# Avoid any pre-defined nix.conf
+sudo rm /etc/nix/nix.conf
+
+nix --extra-experimental-features "nix-command flakes" run
 
 echo "\n# All done 🥳 Please start a **new terminal window**"
 # TODO: Can we automate this? This doesn't work
