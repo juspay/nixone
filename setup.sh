@@ -9,20 +9,16 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 
 # Run `om health`
 echo "\n# Check nix health"
-nix --accept-flake-config --extra-experimental-features "nix-command flakes" run github:juspay/omnix health
+nix --accept-flake-config run github:juspay/omnix health
 
 # Setup nixos-unified-template
-echo "\n# Setting up nix-darwin & direnv"
-nix --accept-flake-config --extra-experimental-features "nix-command flakes" run github:juspay/omnix -- \
+echo "\n# Setting up home-manager & direnv"
+nix --accept-flake-config run github:juspay/omnix -- \
   init github:juspay/nixos-unified-template#darwin -o ~/nixconfig \
   --non-interactive \
-  --params '{"username":"'$(id -un)'", "git-name":"'$(id -F)'", "git-email":"'$(id -un)'@juspay.in", "hostname": "'$(hostname -s)'"}'
+  --params '{"username":"'$(id -un)'", "git-name":"'$(id -F)'", "git-email":"'$(id -un)'@juspay.in"}'
 
-# Avoid any pre-defined nix.conf
-echo "\n# Removing /etc/nix/nix.conf"
-sudo rm /etc/nix/nix.conf
-
-cd ~/nixconfig && nix --extra-experimental-features "nix-command flakes" run
+cd ~/nixconfig && nix run
 
 echo "\n# All done 🥳 Please start a **new terminal window**"
 # TODO: Can we automate this? This doesn't work
