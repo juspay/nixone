@@ -16,7 +16,7 @@ echo "\n# Setting up home-manager & direnv"
 nix --accept-flake-config run github:juspay/omnix -- \
   init github:juspay/nixos-unified-template#home -o ~/nixconfig \
   --non-interactive \
-  --params '{"username":"'$(id -un)'", "git-name":"'$(id -F)'", "git-email":"'$(id -un)'@juspay.in"}'
+  --params '{"username":"'$(id -un)'", "git-name":"$(id -F)", "git-email":"'$(id -un)'@juspay.in"}'
 
 cd ~/nixconfig && nix run
 
