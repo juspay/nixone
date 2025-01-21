@@ -14,11 +14,11 @@ nix --accept-flake-config run github:juspay/omnix health
 # Setup nixos-unified-template
 echo "\n# Setting up home-manager & direnv"
 nix --accept-flake-config run github:juspay/omnix -- \
-  init github:juspay/nixos-unified-template#home -o ~/nixconfig \
+  init github:juspay/nixos-unified-template#home -o ~/.config/home-manager \
   --non-interactive \
   --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in"}'
 
-cd ~/nixconfig && nix run
+cd ~/.config/home-manager && nix run
 
 echo "\n# All done 🥳 Please start a **new terminal window**"
 # TODO: Can we automate this? This doesn't work
