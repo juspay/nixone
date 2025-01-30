@@ -1,11 +1,14 @@
 #!/bin/sh
 
-# Install Nix
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-  sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
+# Check if nix is already installed
+if ! which nix > /dev/null 2>&1; then
+  # Install Nix
+  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
+    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
 
-# Source nix configuration
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  # Source nix configuration
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
 
 # Run `om health`
 echo "\n# Check nix health"
