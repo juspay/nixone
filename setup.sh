@@ -23,6 +23,9 @@ nix --accept-flake-config run github:juspay/omnix -- \
 
 cd ~/.config/home-manager && nix run
 
+echo "\n# Initialize a git repo"
+git init && git add . && git commit -m Init
+
 echo "\n# All done 🥳 Please start a **new terminal window**"
 # TODO: Can we automate this? This doesn't work
 # env -i HOME="$HOME" "$SHELL" -l
