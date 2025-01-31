@@ -16,7 +16,7 @@ nix --accept-flake-config run github:juspay/omnix health
 
 health_output=$(nix --accept-flake-config run github:juspay/omnix -- health --json 2>/dev/null)
 
-if [ $? -eq 0 ] && [ $(echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys" and .checks.shell.result == "Green"') ]; then
+if [ $? -eq 0 ] && [ $(echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys" and .checks.shell.result | has("Red")') ]; then
   # Setup nixos-unified-template
   echo "\n# Setting up home-manager & direnv"
   nix --accept-flake-config run github:juspay/omnix -- \
