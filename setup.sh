@@ -14,19 +14,26 @@ fi
 echo "\n# Check nix health"
 nix --accept-flake-config run github:juspay/omnix health
 
-# Setup nixos-unified-template
-echo "\n# Setting up home-manager & direnv"
-nix --accept-flake-config run github:juspay/omnix -- \
-  init github:juspay/nixos-unified-template#home -o ~/.config/home-manager \
-  --non-interactive \
-  --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in"}'
+health_output=$(nix --accept-flake-config run github:juspay/omnix -- health --json 2>/dev/null)
 
-cd ~/.config/home-manager && nix run
+if [ $? -eq 0 ] && [ $(echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys" and .checks.shell.result == "Green"') ]; then
+  # Setup nixos-unified-template
+  echo "\n# Setting up home-manager & direnv"
+  nix --accept-flake-config run github:juspay/omnix -- \
+    init github:juspay/nixos-unified-template#home -o ~/.config/home-manager \
+    --non-interactive \
+    --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in"}'
 
-echo "\n# Initialize a git repo"
-git init && git add . && git commit -m Init
+  cd ~/.config/home-manager && nix run
 
-echo "\n# All done 🥳 Please start a **new terminal window**"
-# TODO: Can we automate this? This doesn't work
-# env -i HOME="$HOME" "$SHELL" -l
+  echo "\n# Initialize a git repo"
+  git init && git add . && git commit -m Init
+
+  echo "\n# All done 🥳 Please start a **new terminal window**"
+  # TODO: Can we automate this? This doesn't work
+  # env -i HOME="$HOME" "$SHELL" -l
+else
+  echo "\n# Nix unhealthy"
+  echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
+fi
 
