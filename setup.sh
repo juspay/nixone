@@ -8,8 +8,10 @@ if ! which nix > /dev/null; then
     sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
 
   # Resolves https://github.com/juspay/nixone/issues/19
-  # TODO: Run these only if this directory does not exist.
-  sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/ && sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
+  if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
+    sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/
+    sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
+  fi
 
   # Source nix configuration
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
