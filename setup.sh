@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Check if nix is already installed
 if ! which nix > /dev/null 2>&1; then
   # Install Nix
@@ -14,9 +13,22 @@ fi
 echo "\n# Check nix health"
 nix --accept-flake-config run github:juspay/omnix health
 
-health_output=$(nix --accept-flake-config run github:juspay/omnix -- health --json 2>/dev/null)
+health_out=$(nix --accept-flake-config run github:juspay/omnix -- health --json 2>/dev/null)
+is_nix_healthy=$?
 
-if [ $? -eq 0 ] && [ $(echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys" and .checks.shell.result | has("Red")') ]; then
+echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys"'
+is_detsys_used=$?
+
+if [ $is_nix_healthy -ne 0 ] && [ $is_detsys_used -ne 0 ]; then
+  echo "\n# Nix unhealthy"
+  echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
+  exit 1
+fi
+
+echo $health_output | nix run nixpkgs#jq -- -e '.checks.shell.result != "Green"'
+is_home_manager_inactive=$?
+
+if [ $is_home_manager_inactive -eq 0 ]; then
   # Setup nixos-unified-template
   echo "\n# Setting up home-manager & direnv"
   nix --accept-flake-config run github:juspay/omnix -- \
@@ -32,8 +44,4 @@ if [ $? -eq 0 ] && [ $(echo $health_output | nix run nixpkgs#jq -- -e '.info.nix
   echo "\n# All done 🥳 Please start a **new terminal window**"
   # TODO: Can we automate this? This doesn't work
   # env -i HOME="$HOME" "$SHELL" -l
-else
-  echo "\n# Nix unhealthy"
-  echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
 fi
-
