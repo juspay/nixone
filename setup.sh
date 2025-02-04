@@ -16,7 +16,7 @@ nix --accept-flake-config run github:juspay/omnix health
 health_out=$(nix --accept-flake-config run github:juspay/omnix -- health --json 2>/dev/null)
 is_nix_healthy=$?
 
-echo $health_output | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys"'
+echo $health_out | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys"' > /dev/null
 is_detsys_used=$?
 
 if [ $is_nix_healthy -ne 0 ] && [ $is_detsys_used -ne 0 ]; then
@@ -25,7 +25,7 @@ if [ $is_nix_healthy -ne 0 ] && [ $is_detsys_used -ne 0 ]; then
   exit 1
 fi
 
-echo $health_output | nix run nixpkgs#jq -- -e '.checks.shell.result != "Green"'
+echo $health_out | nix run nixpkgs#jq -- -e '.checks.shell.result != "Green"' > /dev/null
 is_home_manager_inactive=$?
 
 if [ $is_home_manager_inactive -eq 0 ]; then
