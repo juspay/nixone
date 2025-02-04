@@ -1,9 +1,15 @@
 #!/bin/sh
+set -euo pipefail
+
 # Check if nix is already installed
-if ! which nix > /dev/null 2>&1; then
+if ! which nix > /dev/null; then
   # Install Nix
   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
     sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
+
+  # Resolves https://github.com/juspay/nixone/issues/19
+  # TODO: Run these only if this directory does not exist.
+  sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/ && sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
 
   # Source nix configuration
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -19,8 +25,10 @@ is_nix_healthy=$?
 echo $health_out | nix run nixpkgs#jq -- -e '.info.nix_installer.type == "DetSys"' > /dev/null
 is_detsys_used=$?
 
+# Check if any of the required health checks fail and also that https://github.com/DeterminateSystems/nix-installer is used
+#
+# TODO: evaluate if Uninstalling Nix is too harsh of a suggestion here
 if [ $is_nix_healthy -ne 0 ] && [ $is_detsys_used -ne 0 ]; then
-  echo "\n# Nix unhealthy"
   echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
   exit 1
 fi
