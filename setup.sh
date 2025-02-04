@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
 
 # Check if nix is already installed
 if ! which nix > /dev/null; then
