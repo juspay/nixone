@@ -15,11 +15,11 @@ jobs:
       - name: Create GitHub Pages content
         run: |
           mkdir public
-          cp setup.sh public/
           echo '<html><body><pre>' > public/index.html
           echo "Please see https://github.com/juspay/nixone" >> public/index.html
           echo '</pre></body></html>' >> public/index.html
           cp setup.sh public/setup
+          cp health.sh public/health
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

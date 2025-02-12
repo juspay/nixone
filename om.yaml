@@ -1,0 +1,9 @@
+health:
+  default:
+    nix-version:
+      supported: ">=2.16.0"
+    direnv:
+      required: true
+    trusted-users:
+      enable: true
+
