@@ -6,4 +6,6 @@ health:
       required: true
     trusted-users:
       enable: true
-
+    caches:
+      required:
+        - https://euler.cachix.org
