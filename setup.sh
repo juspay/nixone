@@ -9,6 +9,7 @@ if ! which nix > /dev/null; then
 
   # Resolves https://github.com/juspay/nixone/issues/19
   if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
+    echo "\n# Fix missing per-user profile"
     sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/
     sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
   fi
@@ -26,15 +27,16 @@ _jq() {
 }
 
 # Run `om health`
+# Note: Using `|| true` to ignore exit-code of commands that shouldn't crash the script on failure
 echo "\n# Check nix health"
-_om health
+{ _om health; health_status=$?; } || true
 
-health_out=$(_om health --json 2>/dev/null)
+health_out=$(_om health --json 2>/dev/null) || true
 
 # Check if <https://github.com/DeterminateSystems/nix-installer> is used
 #
 # TODO: evaluate if Uninstalling Nix is too harsh of a suggestion here
-if echo "$health_out" | _jq -e '.info.nix_installer.type != "DetSys"'; then
+if [ $health_status -ne 0 ] && echo "$health_out" | _jq -e '.info.nix_installer.type != "DetSys"'; then
   echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
   exit 1
 fi
