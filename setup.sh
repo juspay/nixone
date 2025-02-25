@@ -9,7 +9,6 @@ if ! which nix > /dev/null; then
 
   # Resolves https://github.com/juspay/nixone/issues/19
   if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
-    echo "\n# Fix missing per-user profile"
     sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/
     sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
   fi
