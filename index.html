@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>NixOne: Install Nix & Home-Manager</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body
+        class="bg-gradient-to-br from-purple-700 via-blue-600 to-teal-500 font-sans text-white"
+    >
+        <div class="min-h-screen flex flex-col">
+            <!-- Header -->
+            <header class="py-8">
+                <div class="container mx-auto px-6 text-center">
+                    <h1
+                        class="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg"
+                    >
+                        NixOne: Install Nix & Home-Manager
+                    </h1>
+                    <p class="mt-3 text-lg md:text-xl font-light">
+                        Nixify your system with one command
+                    </p>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-grow container mx-auto px-6 py-10">
+                <section
+                    class="bg-white bg-opacity-10 backdrop-blur-lg shadow-xl rounded-xl p-8 max-w-4xl mx-auto"
+                >
+                    <h2
+                        class="text-3xl font-bold mb-6 text-center text-teal-100"
+                    >
+                        Get Started Now
+                    </h2>
+                    <p class="mb-6 text-lg text-center">
+                        Install Nix and Home-Manager effortlessly with this
+                        single command. It primarily targets Juspay
+                        environments.
+                    </p>
+
+                    <!-- Code Block -->
+                    <div
+                        class="bg-gray-900 bg-opacity-80 p-4 rounded-lg mb-6 flex items-center justify-between"
+                    >
+                        <code
+                            class="text-sm md:text-base text-teal-300 break-all"
+                        >
+                            curl --proto '=https' --tlsv1.2 -sSf -L
+                            https://juspay.github.io/nixone/setup | sh -s
+                        </code>
+                        <button
+                            onclick="navigator.clipboard.writeText('curl --proto \'=https\' --tlsv1.2 -sSf -L https://juspay.github.io/nixone/setup | sh -s')"
+                            class="ml-4 bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded"
+                        >
+                            Copy
+                        </button>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h3
+                                class="text-xl font-semibold mb-3 text-teal-100"
+                            >
+                                Why Nix?
+                            </h3>
+                            <ul class="list-disc pl-5 text-gray-200">
+                                <li>Reproducible user environment</li>
+                                <li>
+                                    <a
+                                        class="text-teal-100 hover:text-teal-200"
+                                        href="https://nixos.asia/en/why-dev"
+                                        >Superior Development Environments</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3
+                                class="text-xl font-semibold mb-3 text-teal-100"
+                            >
+                                How It Works
+                            </h3>
+                            <p class="text-gray-200">
+                                Install Nix using
+                                <a
+                                    class="text-teal-100 hover:text-teal-200"
+                                    href="https://github.com/DeterminateSystems/nix-installer"
+                                    >the unofficial installer</a
+                                >, followed by initializing
+                                <a
+                                    class="text-teal-100 hover:text-teal-200"
+                                    href="https://github.com/juspay/nixos-unified-template"
+                                    >a home-manager template</a
+                                >.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mt-8 mb-3 text-teal-100">
+                        Requirements
+                    </h3>
+                    <p class="text-gray-200 mb-6">
+                        Compatible with Unix-like systems (e.g., Linux, macOS).
+                        Requires an internet connection and administrative
+                        privileges.
+                    </p>
+
+                    <div class="text-center">
+                        <a
+                            href="https://nixos.asia/en/tutorial"
+                            target="_blank"
+                            class="inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg"
+                        >
+                            Learn More About Nix
+                        </a>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="bg-gray-900 bg-opacity-50 py-6">
+                <div class="container mx-auto px-6 text-center">
+                    <p class="text-gray-300">© 2025 Juspay.</p>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
