@@ -4,6 +4,8 @@ health:
       supported: ">=2.16.0"
     direnv:
       required: true
+    homebrew:
+      enable: true
     trusted-users:
       enable: true
     caches:
