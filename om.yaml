@@ -6,6 +6,7 @@ health:
       required: true
     homebrew:
       enable: true
+      required: true
     trusted-users:
       enable: true
     caches:
