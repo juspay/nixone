@@ -46,7 +46,7 @@ if echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; th
   nix --accept-flake-config run github:juspay/omnix -- \
     init github:juspay/nixos-unified-template#home -o ~/.config/home-manager \
     --non-interactive \
-    --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in"}'
+    --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in", "work": true}'
 
   cd ~/.config/home-manager && nix run
 
