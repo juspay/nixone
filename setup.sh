@@ -41,6 +41,13 @@ if [ $health_status -ne 0 ] || echo "$health_out" | _jq -e '.info.nix_installer.
 fi
 
 if echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; then
+  if [ -d ~/.config/home-manager ]; then
+    echo "\n# Directory ~/.config/home-manager already exists."
+    echo "Run: \`cd ~/.config/home-manager && nix run\`"
+    echo "To activate existing home-manager configuration, or remove the directory and re-run the curl to setup afresh."
+    exit 1
+  fi
+
   # Setup nixos-unified-template
   echo "\n# Setting up home-manager & direnv"
   nix --accept-flake-config run github:juspay/omnix -- \
