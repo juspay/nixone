@@ -73,6 +73,12 @@ _setup_hm() {
 if [ "$RESET_HM" -eq 1 ]; then
   echo "\n# Resetting home-manager"
   if [ -d ~/.config/home-manager ]; then
+    if [ -d ~/.config/home-manager-backup ]; then
+      # time-stamped backups can have unbounded growth
+      # instead, we assume user wants to keep only the latest config
+      echo "\n# Removing existing backup"
+      rm -rf ~/.config/home-manager-backup
+    fi
     mv ~/.config/home-manager ~/.config/home-manager-backup
     echo "\n# Backed up ~/.config/home-manager to ~/.config/home-manager-backup"
   else
