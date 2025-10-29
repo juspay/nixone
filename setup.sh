@@ -80,10 +80,7 @@ if [ "$RESET_HM" -eq 1 ]; then
   fi
 
   _setup_hm
-  exit 0
-fi
-
-if echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; then
+elif echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; then
   if [ -d ~/.config/home-manager ]; then
     echo "\n# Directory ~/.config/home-manager already exists."
     echo "Run: \`cd ~/.config/home-manager && nix run\`"
