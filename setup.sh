@@ -1,6 +1,16 @@
 #!/bin/sh
 set -eu
 
+# Parse CLI args
+RESET_HM=0
+for arg in "$@"; do
+  case "$arg" in
+    --reset-hm)
+      RESET_HM=1
+      ;;
+  esac
+done
+
 # Check if nix is already installed
 if ! which nix > /dev/null; then
   # Install Nix
@@ -40,14 +50,8 @@ if [ $health_status -ne 0 ] || echo "$health_out" | _jq -e '.info.nix_installer.
   exit 1
 fi
 
-if echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; then
-  if [ -d ~/.config/home-manager ]; then
-    echo "\n# Directory ~/.config/home-manager already exists."
-    echo "Run: \`cd ~/.config/home-manager && nix run\`"
-    echo "To activate existing home-manager configuration, or remove the directory and re-run the curl to setup afresh."
-    exit 1
-  fi
-
+# Initialize template, activate home-manager, and initialize git
+_setup_hm() {
   # Setup nixos-unified-template
   echo "\n# Setting up home-manager & direnv"
   nix --accept-flake-config run github:juspay/omnix -- \
@@ -63,4 +67,33 @@ if echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; th
   echo "\n# All done 🥳 Please start a **new terminal window**"
   # TODO: Can we automate this? This doesn't work
   # env -i HOME="$HOME" "$SHELL" -l
+}
+
+# If --reset-hm is passed, reset regardless of shell health status being Green
+if [ "$RESET_HM" -eq 1 ]; then
+  echo "\n# Resetting home-manager"
+  if [ -d ~/.config/home-manager ]; then
+    if [ -d ~/.config/home-manager-backup ]; then
+      # time-stamped backups can have unbounded growth
+      # instead, we assume user wants to keep only the latest config
+      echo "\n# Removing existing backup"
+      rm -rf ~/.config/home-manager-backup
+    fi
+    mv ~/.config/home-manager ~/.config/home-manager-backup
+    echo "\n# Backed up ~/.config/home-manager to ~/.config/home-manager-backup"
+  else
+    echo "No existing ~/.config/home-manager to backup."
+  fi
+
+  _setup_hm
+elif echo "$health_out" | _jq -e '.checks.shell.result != "Green"' > /dev/null; then
+  if [ -d ~/.config/home-manager ]; then
+    echo "\n# Directory ~/.config/home-manager already exists."
+    echo "Run: \`cd ~/.config/home-manager && nix run\`"
+    echo "To activate existing home-manager configuration, or remove the directory and re-run the curl to setup afresh."
+    exit 1
+  fi
+
+  _setup_hm
 fi
+
