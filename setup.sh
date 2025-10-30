@@ -15,7 +15,7 @@ done
 if ! which nix > /dev/null; then
   # Install Nix
   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
+    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)" --prefer-upstream-nix
 
   # Resolves https://github.com/juspay/nixone/issues/19
   if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
