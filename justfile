@@ -5,3 +5,7 @@ test-ubuntu:
 # Run all checks
 check:
     nix flake check --show-trace
+
+# Interactive test (opens VM window + Python console)
+test-interactive:
+    nix run .#ubuntu-test-interactive

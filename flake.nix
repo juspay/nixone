@@ -10,8 +10,9 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
 
-      perSystem = { config, self', inputs', pkgs, system, ... }: {
-        checks.ubuntu-setup-test = (nix-vm-test.lib.${system}.ubuntu."24_04" {
+      perSystem = { config, self', inputs', pkgs, system, ... }:
+      let
+        vmTest = nix-vm-test.lib.${system}.ubuntu."24_04" {
           sharedDirs = {
             nixone = {
               source = "${self}";
@@ -23,20 +24,8 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            # Find network interface name
-            print("Available interfaces:")
-            print(machine.succeed("ip link show"))
-
-            # Get the actual interface name (not lo)
-            iface = machine.succeed("ip link show | grep -v 'lo:' | grep '^[0-9]' | head -1 | cut -d: -f2 | tr -d ' '").strip()
-            print(f"Using interface: {iface}")
-
-            # Fix network - bring up interface and get DHCP
-            print(f"Bringing up {iface}...")
-            machine.succeed(f"ip link set {iface} up")
-            machine.succeed(f"dhclient -v {iface}")
-
-            # Wait for network
+            # Wait for network (networkd should configure ens4 via DHCP)
+            machine.wait_for_unit("systemd-networkd.service")
             machine.wait_until_succeeds("ping -c 1 1.1.1.1")
 
             # Run the setup script from shared directory
@@ -52,7 +41,20 @@
 
             print("Setup test completed successfully!")
           '';
-        }).sandboxed;
+        };
+      in {
+        # Use driver (has network) wrapped as a check
+        checks.ubuntu-setup-test = pkgs.stdenv.mkDerivation {
+          name = "ubuntu-setup-test";
+          requiredSystemFeatures = [ "kvm" "nixos-test" ];
+          buildCommand = ''
+            ${vmTest.driver}/bin/test-driver
+            touch $out
+          '';
+        };
+
+        # Expose driver for interactive testing
+        packages.ubuntu-test-interactive = vmTest.driverInteractive;
       };
     };
 }
