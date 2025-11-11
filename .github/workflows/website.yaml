@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - integration-test
 
 jobs:
   test:
@@ -17,23 +18,23 @@ jobs:
         run: |
           nix build .#checks.x86_64-linux.ubuntu-setup-test -L
 
-  deploy:
-    needs: test
-    # Note: Nix is already installed on this runner.
-    runs-on: x86_64-linux
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # deploy:
+  #   needs: test
+  #   # Note: Nix is already installed on this runner.
+  #   runs-on: x86_64-linux
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Create GitHub Pages content
-        run: |
-          mkdir public
-          cp setup.sh public/setup
-          cp health.sh public/health
-          cp index.html public/index.html
+  #     - name: Create GitHub Pages content
+  #       run: |
+  #         mkdir public
+  #         cp setup.sh public/setup
+  #         cp health.sh public/health
+  #         cp index.html public/index.html
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+  #     - name: Deploy to GitHub Pages
+  #       uses: peaceiris/actions-gh-pages@v4
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./public
