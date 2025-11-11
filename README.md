@@ -6,7 +6,7 @@ One-click setup of all things Nix for Juspay'ers. We provide an one-line CLI tha
 
 ## Getting Started
 
-On a macOS machine that does not already have Nix installed run the following after getting "Temp admin access",
+On a macOS machine that does not already have Nix installed run the following after getting "Temp admin access" from Kandji,
 
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf -L https://juspay.github.io/nixone/setup | sh -s
