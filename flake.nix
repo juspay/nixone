@@ -26,7 +26,7 @@
 
             # Run the setup script
             print("Running setup.sh...")
-            machine.succeed("bash /mnt/nixone/setup.sh")
+            machine.succeed("bash /mnt/nixone/setup.shXX")
 
             # Source Nix and verify installation
             print("Verifying Nix installation...")
