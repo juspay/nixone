@@ -24,9 +24,20 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            # Wait for network (networkd should configure ens4 via DHCP)
-            machine.wait_for_unit("systemd-networkd.service")
-            machine.wait_until_succeeds("ping -c 1 1.1.1.1")
+            # Debug network status
+            print("=== Checking network ===")
+            print(machine.succeed("systemctl status systemd-networkd.service || true"))
+            print(machine.succeed("networkctl status || true"))
+            print(machine.succeed("ip addr show || true"))
+            print(machine.succeed("ip route show || true"))
+
+            # Try to bring up network manually if needed
+            print("=== Attempting manual network config ===")
+            machine.succeed("systemctl restart systemd-networkd || true")
+            machine.succeed("sleep 5")
+            print(machine.succeed("networkctl status || true"))
+
+            machine.wait_until_succeeds("ping -c 1 1.1.1.1", timeout=30)
 
             # Run the setup script from shared directory
             print("Running setup.sh...")
