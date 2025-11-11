@@ -26,7 +26,7 @@
 
             # Run the setup script
             print("Running setup.sh...")
-            machine.succeed("bash /mnt/nixone/setup.shXX")
+            machine.succeed("bash /mnt/nixone/setup.sh")
 
             # Source Nix and verify installation
             print("Verifying Nix installation...")
@@ -40,10 +40,15 @@
           '';
         };
       in {
-        # Use driver (non-interactive, has network) for CI
-        checks.ubuntu-setup-test = vmTest.driver.overrideAttrs (old: {
+        # Run driver (has network) as a build step
+        checks.ubuntu-setup-test = pkgs.stdenv.mkDerivation {
+          name = "ubuntu-setup-test";
           requiredSystemFeatures = [ "kvm" "nixos-test" ];
-        });
+          buildCommand = ''
+            ${vmTest.driver}/bin/test-driver
+            touch $out
+          '';
+        };
       };
     };
 }
