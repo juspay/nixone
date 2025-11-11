@@ -12,16 +12,77 @@ for arg in "$@"; do
 done
 
 # Check if nix is already installed
-if ! which nix > /dev/null; then
-  # Install Nix
-  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)" --prefer-upstream-nix
+if ! nix --version > /dev/null 2>&1; then
+  echo "\n# Installing Nix"
+
+  # macOS: Check for Rosetta
+  if [ "$(uname)" = "Darwin" ]; then
+    if [ "$(sysctl -n sysctl.proc_translated 2>/dev/null)" = "1" ]; then
+      echo "Error: Running on Rosetta. Please run in native ARM64 terminal"
+      exit 1
+    fi
+  fi
+
+  # macOS: Cleanup old backup files
+  if [ "$(uname)" = "Darwin" ]; then
+    echo "# Cleaning up old backup files"
+    sudo rm -f /etc/bashrc.backup-before-nix /etc/zshrc.backup-before-nix /etc/bash.bashrc.backup-before-nix 2>/dev/null || true
+  fi
+
+  # Stop Nix daemon if running
+  echo "# Stopping any existing Nix daemon"
+  if [ "$(uname)" = "Darwin" ]; then
+    sudo launchctl unload /Library/LaunchDaemons/org.nixos.nix-daemon.plist 2>/dev/null || true
+  else
+    sudo systemctl stop nix-daemon.service 2>/dev/null || true
+    sudo systemctl stop nix-daemon.socket 2>/dev/null || true
+  fi
+
+  # Remove old Nix users/groups
+  echo "# Removing old Nix build users and groups"
+  if [ "$(uname)" = "Darwin" ]; then
+    # macOS: Remove _nixbld users (with underscore prefix)
+    for u in $(sudo dscl . -list /Users 2>/dev/null | grep _nixbld); do
+      sudo dscl . -delete /Users/$u
+    done
+    sudo dscl . -delete /Groups/nixbld 2>/dev/null || true
+  else
+    # Linux: Remove nixbld users (no underscore prefix)
+    for i in $(seq 1 32); do
+      sudo userdel nixbld$i 2>/dev/null || true
+    done
+    sudo groupdel nixbld 2>/dev/null || true
+  fi
+
+  # Install Nix using official installer
+  echo "# Running official Nix installer"
+  curl -L https://nixos.org/nix/install | sudo su - -c 'sh -s -- --daemon'
 
   # Resolves https://github.com/juspay/nixone/issues/19
   if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
     sudo mkdir /nix/var/nix/profiles/per-user/$(id -un)/
     sudo chown $(id -un) /nix/var/nix/profiles/per-user/$(id -un)
   fi
+
+  # Configure nix.conf
+  echo "# Configuring nix.conf"
+  sudo tee -a /etc/nix/nix.conf > /dev/null <<EOF
+max-jobs = auto
+experimental-features = nix-command flakes
+trusted-users = root $(whoami)
+EOF
+
+  # Restart nix-daemon
+  echo "# Restarting nix-daemon"
+  if [ "$(uname)" = "Darwin" ]; then
+    # macOS: launchd manages nix-daemon
+    sudo pkill -9 nix-daemon 2>/dev/null || true
+  else
+    # Linux: systemd manages nix-daemon
+    sudo systemctl restart nix-daemon
+  fi
+  # Give daemon time to restart
+  sleep 2
 
   # Source nix configuration
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -42,11 +103,10 @@ echo "\n# Check nix health"
 
 health_out=$(_om health --json 2>/dev/null) || true
 
-# Check if <https://github.com/DeterminateSystems/nix-installer> is used or required health checks are failing.
-# We are better off recommending uninstalling for latter as well, see https://github.com/juspay/nixone/pull/27#issuecomment-2681094571
-if [ $health_status -ne 0 ] || echo "$health_out" | _jq -e '.info.nix_installer.type != "DetSys"' > /dev/null; then
-  echo "\n# Uninstall Nix: <https://nixos.asia/en/howto/uninstall-nix>. Post uninstall, re-run the script."
-  echo "\n# Note: You will be recommended to uninstall even if your health checks pass, because you are using an unsupported Nix installer"
+# Check if required health checks are failing
+if [ $health_status -ne 0 ]; then
+  echo "\n# Health checks failed. Consider reinstalling Nix."
+  echo "\n# Uninstall guide: <https://nixos.asia/en/howto/uninstall-nix>"
   exit 1
 fi
 
