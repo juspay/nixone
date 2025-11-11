@@ -54,18 +54,10 @@
           '';
         };
       in {
-        # Use driver (has network) wrapped as a check
-        checks.ubuntu-setup-test = pkgs.stdenv.mkDerivation {
-          name = "ubuntu-setup-test";
+        # Use driver (non-interactive, has network) for CI
+        checks.ubuntu-setup-test = vmTest.driver.overrideAttrs (old: {
           requiredSystemFeatures = [ "kvm" "nixos-test" ];
-          buildCommand = ''
-            ${vmTest.driver}/bin/test-driver
-            touch $out
-          '';
-        };
-
-        # Expose driver for interactive testing
-        packages.ubuntu-test-interactive = vmTest.driverInteractive;
+        });
       };
     };
 }
