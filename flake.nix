@@ -23,50 +23,17 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            print("=== NETWORK INTERFACES ===")
-            print(machine.succeed("ip addr show"))
-            print(machine.succeed("ip link show"))
+            # Fix network - bring up eth0 and get DHCP
+            print("Bringing up eth0...")
+            machine.succeed("ip link set eth0 up")
+            machine.succeed("dhclient -v eth0")
 
-            print("\n=== ROUTING TABLE ===")
-            print(machine.succeed("ip route show"))
-            print(machine.succeed("ip route get 1.1.1.1 || true"))
+            # Wait for network
+            machine.wait_until_succeeds("ping -c 1 1.1.1.1")
 
-            print("\n=== DNS CONFIGURATION ===")
-            print(machine.succeed("cat /etc/resolv.conf"))
-            print(machine.succeed("ls -la /etc/resolv.conf"))
-
-            print("\n=== SYSTEMD-RESOLVED STATUS ===")
-            print(machine.succeed("systemctl status systemd-resolved || true"))
-            print(machine.succeed("systemctl is-active systemd-resolved || true"))
-            print(machine.succeed("resolvectl status || true"))
-
-            print("\n=== NETWORK SERVICES ===")
-            print(machine.succeed("systemctl status NetworkManager || true"))
-            print(machine.succeed("systemctl status networking || true"))
-            print(machine.succeed("systemctl list-units | grep network || true"))
-
-            print("\n=== CONNECTIVITY TESTS ===")
-            print("Testing gateway ping:")
-            print(machine.succeed("ping -c 1 $(ip route | grep default | awk '{print $3}') || true"))
-            print("Testing external IP (1.1.1.1):")
-            print(machine.succeed("ping -c 1 1.1.1.1 || true"))
-            print("Testing external IP (8.8.8.8):")
-            print(machine.succeed("ping -c 1 8.8.8.8 || true"))
-
-            print("\n=== DNS RESOLUTION TESTS ===")
-            print("Using nslookup:")
-            print(machine.succeed("nslookup google.com || true"))
-            print("Using dig:")
-            print(machine.succeed("dig google.com || true"))
-            print("Using getent:")
-            print(machine.succeed("getent hosts google.com || true"))
-
-            print("\n=== FIREWALL STATUS ===")
-            print(machine.succeed("iptables -L -n || true"))
-            print(machine.succeed("ufw status || true"))
-
-            print("\n=== ALL DONE - STOPPING HERE ===")
-            # Don't run setup.sh yet, just debugging
+            # Run the setup script from shared directory
+            print("Running setup.sh...")
+            machine.succeed("bash /mnt/nixone/setup.sh")
 
             # Source Nix to get it in PATH
             print("Sourcing Nix profile...")
