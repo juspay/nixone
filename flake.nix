@@ -24,6 +24,19 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
+            # Wait for network and DNS
+            print("Waiting for network...")
+            machine.wait_for_unit("systemd-networkd.service")
+            machine.wait_for_unit("systemd-resolved.service")
+
+            # Test DNS resolution
+            print("Testing DNS resolution...")
+            machine.wait_until_succeeds("nslookup google.com", timeout=60)
+
+            # Verify connectivity
+            print("Testing connectivity...")
+            machine.succeed("curl -s https://www.google.com > /dev/null")
+
             # Run the setup script
             print("Running setup.sh...")
             machine.succeed("bash /mnt/nixone/setup.sh")
