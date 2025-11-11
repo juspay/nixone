@@ -20,7 +20,11 @@
           };
 
           testScript = ''
-            machine.wait_for_unit("network-online.target")
+            start_all()
+            machine.wait_for_unit("multi-user.target")
+
+            # Wait for network to be ready
+            machine.wait_until_succeeds("ping -c 1 1.1.1.1")
 
             # Run the setup script from shared directory
             print("Running setup.sh...")
