@@ -16,7 +16,7 @@ jobs:
 
       - name: Test setup.sh in Ubuntu VM
         run: |
-          nix build .#checks.x86_64-linux.ubuntu-setup-test -L
+          nix run .#ubuntu-test
 
   # deploy:
   #   needs: test
