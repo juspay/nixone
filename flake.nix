@@ -23,13 +23,10 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            # Configure DNS
-            machine.succeed("echo 'nameserver 1.1.1.1' > /etc/resolv.conf")
-            machine.succeed("echo 'nameserver 8.8.8.8' >> /etc/resolv.conf")
-
-            # Wait for network to be ready
-            machine.wait_until_succeeds("ping -c 1 1.1.1.1")
-            machine.wait_until_succeeds("curl -sSf https://www.google.com > /dev/null")
+            # Debug network
+            print(machine.succeed("ip addr"))
+            print(machine.succeed("ip route"))
+            print(machine.succeed("cat /etc/resolv.conf"))
 
             # Run the setup script from shared directory
             print("Running setup.sh...")
