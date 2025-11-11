@@ -13,6 +13,7 @@
       perSystem = { config, self', inputs', pkgs, system, ... }:
         let
           vmTest = nix-vm-test.lib.${system}.ubuntu."24_04" {
+            diskSize = "+5G";
             sharedDirs = {
               nixone = {
                 source = "${self}";
