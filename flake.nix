@@ -23,10 +23,18 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            # Fix network - bring up eth0 and get DHCP
-            print("Bringing up eth0...")
-            machine.succeed("ip link set eth0 up")
-            machine.succeed("dhclient -v eth0")
+            # Find network interface name
+            print("Available interfaces:")
+            print(machine.succeed("ip link show"))
+
+            # Get the actual interface name (not lo)
+            iface = machine.succeed("ip link show | grep -v 'lo:' | grep '^[0-9]' | head -1 | cut -d: -f2 | tr -d ' '").strip()
+            print(f"Using interface: {iface}")
+
+            # Fix network - bring up interface and get DHCP
+            print(f"Bringing up {iface}...")
+            machine.succeed(f"ip link set {iface} up")
+            machine.succeed(f"dhclient -v {iface}")
 
             # Wait for network
             machine.wait_until_succeeds("ping -c 1 1.1.1.1")
