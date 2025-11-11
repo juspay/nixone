@@ -24,33 +24,19 @@
             start_all()
             machine.wait_for_unit("multi-user.target")
 
-            # Debug network status
-            print("=== Checking network ===")
-            print(machine.succeed("systemctl status systemd-networkd.service || true"))
-            print(machine.succeed("networkctl status || true"))
-            print(machine.succeed("ip addr show || true"))
-            print(machine.succeed("ip route show || true"))
-
-            # Try to bring up network manually if needed
-            print("=== Attempting manual network config ===")
-            machine.succeed("systemctl restart systemd-networkd || true")
-            machine.succeed("sleep 5")
-            print(machine.succeed("networkctl status || true"))
-
-            machine.wait_until_succeeds("ping -c 1 1.1.1.1", timeout=30)
-
-            # Run the setup script from shared directory
+            # Run the setup script
             print("Running setup.sh...")
             machine.succeed("bash /mnt/nixone/setup.sh")
 
-            # Source Nix to get it in PATH
-            print("Sourcing Nix profile...")
+            # Source Nix and verify installation
+            print("Verifying Nix installation...")
             machine.succeed(". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && which nix")
 
             # Verify home-manager setup
+            print("Verifying home-manager setup...")
             machine.succeed("test -d ~/.config/home-manager")
 
-            print("Setup test completed successfully!")
+            print("Test completed successfully!")
           '';
         };
       in {
