@@ -6,8 +6,21 @@ on:
       - main
 
 jobs:
+  test:
+    # Note: Nix is already installed on this runner.
+    runs-on: x86_64-linux
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test setup.sh in Ubuntu VM
+        run: |
+          nix build .#checks.x86_64-linux.ubuntu-setup-test -L
+
   deploy:
-    runs-on: ubuntu-latest
+    needs: test
+    # Note: Nix is already installed on this runner.
+    runs-on: x86_64-linux
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

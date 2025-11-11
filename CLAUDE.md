@@ -4,3 +4,5 @@ This project hosts a static website providing two endpoints:
 2. `health.sh`: To check the health of the user's Nix environment.
 
 The `setup.sh` script defers to Determinate Systems nix-installer to do the actual installation. And the `health.sh` script uses omnix to do the health check.
+
+**CRITICAL**: You must use the Nix skill before proceeding with any code change.
