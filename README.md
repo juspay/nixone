@@ -13,7 +13,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://juspay.github.io/nixone/setup | 
 ```
 
 >[!NOTE]
-> You may still run this command if you installed Nix already using Determinate Systes nix-installer. The script will then setup `nix-dev-home` for you (see below).
+> You may still run this command if you installed Nix already using [experimental-nix-installer]. The script will then setup `nixos-unified-template` for you (see below).
 
 ## Running health check only
 
@@ -27,3 +27,6 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://juspay.github.io/nixone/health |
 - [Run `om health`](https://omnix.page/om/health.html)
 - [Setup home-manager via `nixos-unified-template`](https://github.com/juspay/nixos-unified-template)
     - Resulting config will be accessible at `~/.config/home-manager`. You can modify this later.
+
+
+[experimental-nix-installer]: https://github.com/NixOS/experimental-nix-installer
