@@ -14,8 +14,8 @@ done
 # Check if nix is already installed
 if ! which nix > /dev/null; then
   # Install Nix
-  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)" --prefer-upstream-nix
+  curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
+    sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
 
   # Resolves https://github.com/juspay/nixone/issues/19
   if [ ! -d "/nix/var/nix/profiles/per-user/$(id -un)/" ]; then
