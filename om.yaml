@@ -9,6 +9,7 @@ health:
       required: true
     trusted-users:
       enable: true
-    caches:
-      required:
-        - https://euler.cachix.org
+    # TODO: Add the attic cache after https://github.com/juspay/omnix/issues/474
+    # caches:
+    #   required:
+    #     - https://euler.cachix.org
