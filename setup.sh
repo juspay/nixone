@@ -59,7 +59,7 @@ _setup_hm() {
     --non-interactive \
     --params '{"username":"'$(id -un)'", "git-name":"'$(id -un)'", "git-email":"'$(id -un)'@juspay.in", "work": true}'
 
-  cd ~/.config/home-manager && nix run
+  cd ~/.config/home-manager && USER=$(id -un) nix run
 
   echo "\n# Initialize a git repo"
   git init && git add . && git commit -m Init
