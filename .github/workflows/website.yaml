@@ -17,6 +17,9 @@ jobs:
           mkdir public
           cp setup.sh public/setup
           cp health.sh public/health
+          cp install-nix.sh public/install-nix
+          cp setup-hm.sh public/setup-hm
+          cp self-service.sh public/self-service
           cp index.html public/index.html
 
       - name: Deploy to GitHub Pages
