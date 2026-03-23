@@ -9,8 +9,9 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if which nix > /dev/null 2>&1; then
+if [ -d "/nix" ]; then
   echo "Nix is already installed."
+  echo "Run `Nix Uninstaller` from self-service and then re-run the current app to re-install"
   exit 0
 fi
 
