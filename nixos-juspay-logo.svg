@@ -37,6 +37,7 @@
   </defs>
   
   <g transform="translate(-156.41121,933.30685)">
+    <circle cx="250.6" cy="218.3" r="200" fill="white" />
     <use xlink:href="#light-arm" />
     <use xlink:href="#light-arm" transform="rotate(60,407.11155,-715.78724)" />
     <use xlink:href="#light-arm" transform="rotate(-60,407.31177,-715.70016)" />
