@@ -21,6 +21,7 @@ jobs:
           cp setup-hm.sh public/setup-hm
           cp self-service.sh public/self-service
           cp index.html public/index.html
+          cp nixos-juspay-logo.svg public/logo.svg
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
