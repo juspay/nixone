@@ -24,4 +24,3 @@ if [ ! -d "/nix/var/nix/profiles/per-user/${TARGET_USER}/" ]; then
   sudo chown "${TARGET_USER}" "/nix/var/nix/profiles/per-user/${TARGET_USER}"
 fi
 
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
