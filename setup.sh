@@ -14,7 +14,7 @@ done
 # Check if nix is already installed
 if ! which nix > /dev/null; then
   # Install Nix
-  curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/nix-installer/tag/2.33.3/nix-installer.sh | \
+  curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/nix-installer/tag/2.34.5/nix-installer.sh | \
     sh -s -- install --no-confirm --extra-conf "trusted-users = $(whoami)"
 
   # Resolves https://github.com/juspay/nixone/issues/19

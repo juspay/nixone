@@ -16,7 +16,7 @@ if [ -d "/nix" ]; then
 fi
 
 curl --proto '=https' --tlsv1.2 -sSf -L \
-  https://artifacts.nixos.org/nix-installer/tag/2.33.3/nix-installer.sh | \
+  https://artifacts.nixos.org/nix-installer/tag/2.34.5/nix-installer.sh | \
   sh -s -- install --no-confirm --extra-conf "trusted-users = ${TARGET_USER}"
 
 # Resolves https://github.com/juspay/nixone/issues/19
